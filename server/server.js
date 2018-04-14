@@ -96,6 +96,6 @@ app.get("/all", (req, res) => {
       employees = res.rows;
     }
   });
-  res.status(200).json(employees);
+  res.json({ people: employees });
 });
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
