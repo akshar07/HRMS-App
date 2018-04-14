@@ -46,7 +46,7 @@ app.post("/add", (req, res) => {
     `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
     (err, result) => {
       if (err) {
-        return console.log(result);
+        return console.log(err);
       } else {
         console.log("added");
       }
