@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
       console.log("done" + res);
     }
   });
-  res.render("index.ejs");
+  res.render("index");
 });
 app.post("/add", (req, res) => {
   let shortId = shortid.generate();
