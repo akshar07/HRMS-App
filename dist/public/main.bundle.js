@@ -356,11 +356,7 @@ var ViewComponent = /** @class */ (function () {
         this.detailView = true;
     };
     ViewComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.employeeService.getAllEmployees().subscribe(function (employees) {
-            _this.employees = employees;
-            console.log(employees);
-        });
+        this.employees = this.employeeService.getAllEmployees();
     };
     ViewComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
