@@ -92,6 +92,7 @@ app.get("/all", (req, res) => {
     if (err) {
       return console.log(err);
     } else {
+      console.log(res);
       employees = res;
     }
   });
