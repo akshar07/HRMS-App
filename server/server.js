@@ -36,11 +36,11 @@ app.get("/", (req, res) => {
 });
 app.post("/add", (req, res) => {
   console.log(req.body);
-  let shortId = shortid.generate();
-  let name = req.body.employeeName;
-  let baseSalary = req.body.baseSalary;
-  let deductions = req.body.deductions;
-  addEmployee(name, baseSalary, shortId);
+  // let shortId = shortid.generate();
+  // let name = req.body.employeeName;
+  // let baseSalary = req.body.baseSalary;
+  // let deductions = req.body.deductions;
+  // addEmployee(name, baseSalary, shortId);
   res.send({ done: true });
 });
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
