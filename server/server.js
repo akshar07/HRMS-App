@@ -92,8 +92,8 @@ app.get("/all", (req, res) => {
     if (err) {
       return console.log(err);
     } else {
-      console.log(res);
-      employees = res;
+      console.log(res.rows);
+      employees = res.rows;
     }
   });
   res.status(200).send(employees);
