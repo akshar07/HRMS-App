@@ -93,7 +93,7 @@ app.get("/all", (req, res) => {
       return console.log(err);
     } else {
       employees = res.rows;
-      res.json(res.rows);
+      res.send(res.rows);
     }
   });
 });
