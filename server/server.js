@@ -88,12 +88,12 @@ function addDeductions(deductions, emp_id) {
 //get all employees
 app.get("/all", (req, res) => {
   let employees = [];
-  client.query(`SELECT * FROM deductions`, (err, res) => {
+  client.query(`SELECT * FROM deductions`, (err, result) => {
     if (err) {
       return console.log(err);
     } else {
-      employees = res.rows;
-      res.send(res.rows);
+      employees = result.rows;
+      res.send(result.rows);
     }
   });
 });
