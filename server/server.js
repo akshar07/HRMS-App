@@ -42,4 +42,4 @@ app.get("/", (req, res) => {
 //   addEmployee(name, baseSalary, shortId);
 //   res.send({ done: true });
 // });
-app.listen(process.env.PORT, () => console.log("listening"));
+app.listen(process.env.PORT || 3000, () => console.log("listening"));
