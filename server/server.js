@@ -11,8 +11,8 @@ app.use(cors());
 const addEmployee = require("./actions");
 //set static folders
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../public"));
-app.use(express.static(path.join(__dirname, "../public")));
+app.set("views", path.join(__dirname, "../dist/public"));
+app.use(express.static(path.join(__dirname, "../dist/public")));
 //initialize database
 const { Client } = require("pg");
 const client = new Client({
