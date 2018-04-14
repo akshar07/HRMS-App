@@ -22,7 +22,8 @@ const client = new Client({
 //create tables
 
 client.connect();
-const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);`;
+const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);
+                            CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id, deduction_name,deduction_value);`;
 
 //body parser
 app.enable("trust proxy");
@@ -51,19 +52,42 @@ app.post("/add", (req, res) => {
   let emp_id = shortid.generate();
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
+  let deductions = req.body.deductions;
+  //add data to employees table
+  addEmployee(name, baseSalary, emp_id);
+  addDeductions(deductions, emp_id);
 
-  client.query(
-    `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
-    (err, result) => {
-      if (err) {
-        return console.log(err);
-      } else {
-        console.log("added");
-      }
-    }
-  );
-  // let deductions = req.body.deductions;
   // addEmployee(name, baseSalary, shortId);
   res.send({ done: true });
 });
+//addEmployee
+function addEmployee(name, baseSalary, emp_id) {
+  client.query(
+    `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
+    (err, res) => {
+      if (err) {
+        return console.log(err);
+      } else {
+        console.log("employee added");
+      }
+    }
+  );
+}
+//add deductions
+function addDeductions(deductions, emp_id) {
+  deductions.forEach(deduction => {
+    client.query(
+      `INSERT INTO deductions (emp_id,deduction_name,deduction_value) VALUES('${emp_id}','${
+        deduction.name
+      }','${deduction.value}')`,
+      (err, res) => {
+        if (err) {
+          return console.log(err);
+        } else {
+          return console.log("deductions added");
+        }
+      }
+    );
+  });
+}
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
