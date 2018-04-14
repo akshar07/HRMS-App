@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const shortid = require("shortid");
 const app = express();
+const express_enforces_ssl = require("express-enforces-ssl");
 //cors middleware
 app.use(cors());
 //require database add function
@@ -24,7 +25,15 @@ client.connect();
 const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);`;
 
 //body parser
-app.use(bodyParser.json());
+app.enable("trust proxy");
+app.use(express_enforces_ssl());
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(
+  bodyParser.urlencoded({
+    // to support URL-encoded bodies
+    extended: true
+  })
+);
 
 app.get("/", (req, res) => {
   client.query(db_creation_string, (err, res) => {
