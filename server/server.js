@@ -22,7 +22,7 @@ const client = new Client({
 
 client.connect();
 const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);
-                            CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id, deduction_name,deduction_value);`;
+                            CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id TEXT, deduction_name TEXT, deduction_value DECIMAL);`;
 
 //body parser
 app.enable("trust proxy");
