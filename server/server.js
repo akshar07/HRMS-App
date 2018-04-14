@@ -37,14 +37,14 @@ app.use(
 
 app.get("/", (req, res) => {
   console.log(db_creation_string);
-  // client.query(db_creation_string, (err, res) => {
-  //   if (err) {
-  //     return console.log(err);
-  //   } else {
-  //     console.log("done" + res);
-  //   }
-  // });
-  res.render("index.ejs");
+  client.query(db_creation_string, (err, res) => {
+    if (err) {
+      return console.log(err);
+    } else {
+      console.log("done" + res);
+    }
+  });
+  res.render("home.ejs");
 });
 app.post("/add", (req, res) => {
   console.log(req.body);
