@@ -7,7 +7,6 @@ const app = express();
 const express_enforces_ssl = require("express-enforces-ssl");
 //cors middleware
 app.use(cors());
-
 //set static folders
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../dist/public"));
@@ -19,7 +18,6 @@ const client = new Client({
   ssl: true
 });
 //create tables
-
 client.connect();
 const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);
                             CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id TEXT, deduction_name TEXT, deduction_value DECIMAL);`;
@@ -87,4 +85,16 @@ function addDeductions(deductions, emp_id) {
     );
   });
 }
+//get all employees
+app.get("/all", (req, res) => {
+  let employees = [];
+  client.query(`SELECT * FROM deductions`, (err, res) => {
+    if (err) {
+      return console.log(err);
+    } else {
+      employees = res;
+    }
+  });
+  res.status(200).send(employees);
+});
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
