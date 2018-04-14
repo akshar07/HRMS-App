@@ -76,9 +76,9 @@ function addEmployee(name, baseSalary, emp_id) {
 function addDeductions(deductions, emp_id) {
   deductions.forEach(deduction => {
     client.query(
-      `INSERT INTO deductions (emp_id,deduction_name,deduction_value) VALUES('${emp_id}','${
-        deduction.name
-      }','${deduction.value}')`,
+      `INSERT INTO deductions 
+      (emp_id,deduction_name,deduction_value) 
+      VALUES('${emp_id}','${deduction.name}','${deduction.value}')`,
       (err, res) => {
         if (err) {
           return console.log(err);
