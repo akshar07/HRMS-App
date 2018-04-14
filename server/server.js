@@ -7,8 +7,7 @@ const app = express();
 const express_enforces_ssl = require("express-enforces-ssl");
 //cors middleware
 app.use(cors());
-//require database add function
-const addEmployee = require("./actions");
+
 //set static folders
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../dist/public"));
