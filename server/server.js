@@ -41,4 +41,4 @@ app.post("/add", (req, res) => {
   let deductions = req.body.deductions;
   addEmployee(name, baseSalary, shortId);
 });
-app.listen(3000, () => console.log("listening"));
+app.listen(process.env.PORT, () => console.log("listening"));
