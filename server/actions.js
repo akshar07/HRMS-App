@@ -5,6 +5,7 @@ const client = new Client({
 });
 
 function addEmployee(name, base_salary, emp_id) {
+  console.log(called);
   client.query(
     `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${base_salary}','${emp_id}')`,
     (err, result) => {
