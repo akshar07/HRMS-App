@@ -293,7 +293,7 @@ var EmployeeService = /** @class */ (function () {
     }
     EmployeeService.prototype.addEmployee = function (obj) {
         console.log("yes");
-        return this.http.post("http://localhost:3000/add", obj);
+        return this.http.post("https://whispering-fortress-39678.herokuapp.com/add", obj);
     };
     EmployeeService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
