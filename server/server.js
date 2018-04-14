@@ -39,6 +39,16 @@ app.post("/add", (req, res) => {
   let shortId = shortid.generate();
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
+  client.query(
+    `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${base_salary}','${emp_id}')`,
+    (err, result) => {
+      if (err) {
+        return console.log(result);
+      } else {
+        console.log("added");
+      }
+    }
+  );
   // let deductions = req.body.deductions;
   // addEmployee(name, baseSalary, shortId);
   res.send({ done: true });
