@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
       console.log("done" + res);
     }
   });
-  res.render("home.ejs");
+  res.render("index.ejs");
 });
 app.post("/add", (req, res) => {
   console.log(req.body);
