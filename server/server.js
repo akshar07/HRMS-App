@@ -55,8 +55,6 @@ app.post("/add", (req, res) => {
   //add data to employees table
   addEmployee(name, baseSalary, emp_id);
   addDeductions(deductions, emp_id);
-
-  // addEmployee(name, baseSalary, shortId);
   res.send({ done: true });
 });
 //addEmployee
