@@ -19,6 +19,8 @@ const client = new Client({
   ssl: true
 });
 //create tables
+
+client.connect();
 const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);`;
 
 //body parser
@@ -39,6 +41,7 @@ app.post("/add", (req, res) => {
   let emp_id = shortid.generate();
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
+
   client.query(
     `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
     (err, result) => {
