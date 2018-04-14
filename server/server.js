@@ -34,12 +34,12 @@ app.get("/", (req, res) => {
   });
   res.render("index.ejs");
 });
-app.post("/add", (req, res) => {
-  let shortId = shortid.generate();
-  let name = req.body.employeeName;
-  let baseSalary = req.body.baseSalary;
-  let deductions = req.body.deductions;
-  addEmployee(name, baseSalary, shortId);
-  res.send({ done: true });
-});
+// app.post("/add", (req, res) => {
+//   let shortId = shortid.generate();
+//   let name = req.body.employeeName;
+//   let baseSalary = req.body.baseSalary;
+//   let deductions = req.body.deductions;
+//   addEmployee(name, baseSalary, shortId);
+//   res.send({ done: true });
+// });
 app.listen(process.env.PORT, () => console.log("listening"));
