@@ -88,7 +88,7 @@ function addDeductions(deductions, emp_id) {
 //get all employees
 app.get("/all", (req, res) => {
   let employees = [];
-  client.query(`SELECT * FROM deductions`, (err, result) => {
+  client.query(`SELECT * FROM employees`, (err, result) => {
     if (err) {
       return console.log(err);
     } else {

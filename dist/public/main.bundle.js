@@ -324,7 +324,7 @@ module.exports = ""
 /***/ "./src/app/view/view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  view works!\n</p>\n"
+module.exports = "<div class=\"container\">\n  <table>\n    <tr>\n      <th> Employee Id</th>\n      <th> Employee Name</th>\n      <th> Base Salary</th>\n    </tr>\n    <tr *ngFor=\"let employee of employees | async\">\n      <td>{{employee.emp_id}}</td>\n      <td>{{employee.name}}</td>\n      <td>{{employee.baseSalary}}</td>\n      <td>\n        <span (click)=\"showDetails(emp_id)\">\n          <i class=\"far fa-edit\"></i>\n        </span>\n      </td>\n      <div *ngIf=\"detailView\">\n        <app-add-employee></app-add-employee>\n      </div>\n    </tr>\n  </table>\n</div>\n"
 
 /***/ }),
 
@@ -350,7 +350,11 @@ var ViewComponent = /** @class */ (function () {
     function ViewComponent(employeeService) {
         this.employeeService = employeeService;
         this.employees = [];
+        this.detailView = false;
     }
+    ViewComponent.prototype.showDetails = function (emp_id) {
+        this.detailView = true;
+    };
     ViewComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.employeeService.getAllEmployees().subscribe(function (employees) {
