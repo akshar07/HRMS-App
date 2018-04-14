@@ -93,9 +93,8 @@ app.get("/all", (req, res) => {
       return console.log(err);
     } else {
       employees = res.rows;
+      res.json(res.rows);
     }
   });
-  console.log(employees);
-  res.send({ people: employees });
 });
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
