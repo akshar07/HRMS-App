@@ -10,8 +10,8 @@ app.use(cors());
 const addEmployee = require("./actions");
 //set static folders
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../client/dist"));
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.set("views", path.join(__dirname, "../dist"));
+app.use(express.static(path.join(__dirname, "../dist")));
 //initialize database
 const { Client } = require("pg");
 const client = new Client({
@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
       console.log("done" + res);
     }
   });
-  res.render("index");
+  res.render("index.ejs");
 });
 app.post("/add", (req, res) => {
   let shortId = shortid.generate();
@@ -41,4 +41,4 @@ app.post("/add", (req, res) => {
   let deductions = req.body.deductions;
   addEmployee(name, baseSalary, shortId);
 });
-app.listen(process.env.PORT, () => console.log("listening"));
+app.listen(3000, () => console.log("listening"));
