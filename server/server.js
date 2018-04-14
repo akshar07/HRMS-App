@@ -36,6 +36,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
+  console.log(db_creation_string);
   client.query(db_creation_string, (err, res) => {
     if (err) {
       return console.log(err);
