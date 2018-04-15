@@ -99,15 +99,17 @@ function editDeductions(deductions, emp_id) {
         }
       }
     );
+  });
+  deductions.forEach(deduction => {
     client.query(
       `INSERT INTO deductions 
       (emp_id,name,value) 
       VALUES('${emp_id}','${deduction.name}','${deduction.value}')`,
-      (err, result) => {
+      (err, res) => {
         if (err) {
           return console.log(err);
         } else {
-          return console.log("deductions updated");
+          return console.log("deductions added");
         }
       }
     );
