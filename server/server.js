@@ -115,7 +115,7 @@ function updateEmployee(name, baseSalary, emp_id) {
       if (err) {
         return console.log(err);
       } else {
-        return console.log("success!");
+        res.send(result);
       }
     }
   );
