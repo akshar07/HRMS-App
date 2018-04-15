@@ -92,7 +92,7 @@ app.get("/all", (req, res) => {
     if (err) {
       return console.log(err);
     } else {
-      console.log(esult.rows);
+      console.log(result.rows);
       res.send(result.rows);
     }
   });
