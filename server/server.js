@@ -100,6 +100,7 @@ app.get("/all", (req, res) => {
 //edit employee
 app.post("/edit", (req, res) => {
   let emp_id = req.body.emp_id;
+  console.log(emp_id);
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
   let deductions = req.body.deductions;
