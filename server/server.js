@@ -132,7 +132,7 @@ app.post("/edit", (req, res) => {
   let name = req.body.employeeName;
   let baseSalary = Number(req.body.baseSalary);
   let deductions = req.body.deductions;
-  let take_home = Number(req.body.take_home);
+  let take_home = Number(req.body.takeHome);
   updateEmployee(name, baseSalary, emp_id, take_home);
   editDeductions(deductions, emp_id);
   res.send({ done: true });
