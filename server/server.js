@@ -19,7 +19,7 @@ const client = new Client({
 });
 //create tables
 client.connect();
-const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, take_home DECIMAL emp_id TEXT);
+const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, take_home, DECIMAL emp_id TEXT);
                             CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id TEXT, deduction_name TEXT, deduction_value DECIMAL);`;
 
 //body parser
