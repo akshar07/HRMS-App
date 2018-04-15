@@ -50,7 +50,7 @@ app.post("/add", (req, res) => {
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
   let deductions = req.body.deductions;
-  let take_home = req.body.take_home;
+  let take_home = req.body.takeHome;
   //add data to employees table
   addEmployee(name, baseSalary, emp_id, take_home);
   addDeductions(deductions, emp_id);
