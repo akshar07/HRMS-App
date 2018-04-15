@@ -92,7 +92,7 @@ app.get("/all", (req, res) => {
     if (err) {
       return console.log(err);
     } else {
-      employees = result.rows;
+      console.log(esult.rows);
       res.send(result.rows);
     }
   });
