@@ -19,7 +19,7 @@ const client = new Client({
 });
 //create tables
 client.connect();
-const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, emp_id TEXT);
+const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, take_home DECIMAL emp_id TEXT);
                             CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id TEXT, deduction_name TEXT, deduction_value DECIMAL);`;
 
 //body parser
@@ -50,15 +50,16 @@ app.post("/add", (req, res) => {
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
   let deductions = req.body.deductions;
+  let take_home = req.body.take_home;
   //add data to employees table
-  addEmployee(name, baseSalary, emp_id);
+  addEmployee(name, baseSalary, emp_id, take_home);
   addDeductions(deductions, emp_id);
   res.send({ done: true });
 });
 //addEmployee
-function addEmployee(name, baseSalary, emp_id) {
+function addEmployee(name, baseSalary, emp_id, take_home) {
   client.query(
-    `INSERT INTO employees (name, base_salary, emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
+    `INSERT INTO employees (name, base_salary, take_home, emp_id) VALUES ('${name}','${baseSalary}','${take_home}','${emp_id}')`,
     (err, res) => {
       if (err) {
         return console.log(err);
@@ -104,15 +105,16 @@ app.post("/edit", (req, res) => {
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
   let deductions = req.body.deductions;
+  let take_home = req.body.take_home;
 
-  updateEmployee(name, baseSalary, emp_id);
+  updateEmployee(name, baseSalary, emp_id, take_home);
   res.send({ done: true });
 });
 
 //edit employee function
-function updateEmployee(name, baseSalary, emp_id) {
+function updateEmployee(name, baseSalary, emp_id, take_home) {
   client.query(
-    `UPDATE employees SET name='${name}', base_salary='${baseSalary}' WHERE emp_id='${emp_id}'`,
+    `UPDATE employees SET name='${name}', base_salary='${baseSalary}', take_home='${take_home}' WHERE emp_id='${emp_id}'`,
     (err, result) => {
       if (err) {
         return console.log(err);
