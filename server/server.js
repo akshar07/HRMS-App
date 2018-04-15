@@ -105,6 +105,7 @@ app.post("/edit", (req, res) => {
   let deductions = req.body.deductions;
 
   updateEmployee(name, baseSalary, emp_id);
+  res.send({ done: true });
 });
 
 //edit employee
@@ -115,7 +116,7 @@ function updateEmployee(name, baseSalary, emp_id) {
       if (err) {
         return console.log(err);
       } else {
-        res.send(result);
+        return console.log("success");
       }
     }
   );
