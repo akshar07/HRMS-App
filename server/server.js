@@ -97,7 +97,7 @@ app.get("/all", (req, res) => {
     }
   });
 });
-//edit employee
+//edit employee route
 app.post("/edit", (req, res) => {
   let emp_id = req.body.emp_id;
   console.log(emp_id);
@@ -109,7 +109,7 @@ app.post("/edit", (req, res) => {
   res.send({ done: true });
 });
 
-//edit employee
+//edit employee function
 function updateEmployee(name, baseSalary, emp_id) {
   client.query(
     `UPDATE employees SET name='${name}', base_salary='${baseSalary}' WHERE emp_id='${emp_id}'`,
@@ -122,4 +122,18 @@ function updateEmployee(name, baseSalary, emp_id) {
     }
   );
 }
+// get one employe route
+app.get("getOne", (req, res) => {
+  let id = req.params.emp_id;
+  client.query(
+    `SELECT * FROM deductions WHERE emp_id='${id}'`,
+    (err, result) => {
+      if (err) {
+        return console.log(err);
+      } else {
+        res.send(result.rows);
+      }
+    }
+  );
+});
 app.listen(process.env.PORT || 3000, () => console.log("listening"));

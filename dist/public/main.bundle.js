@@ -27,7 +27,7 @@ module.exports = ""
 /***/ "./src/app/add-employee/add-employee.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div>\n    <form [formGroup]=\"inputsForm\" (ngSubmit)=\"OnSubmit(inputsForm.value)\">\n      <div>\n        <label for=\"employeeName\"> Employee Name:</label>\n        <br>\n        <input type=\"text\" formControlName=\"employeeName\">\n        <br>\n        <label for=\"baseSalary\">Base Salary:</label>\n        <br>\n        <input type=\"number\" name=\"baseSalary\" formControlName=\"baseSalary\">\n      </div>\n      <label for=\"Deductions\"> Add Deductions</label>\n      <div formArrayName=\"deductions\" *ngFor=\"let deduction of deductions?.controls; let i = index;\">\n        <div [formGroupName]=\"i\">\n          <input type=\"text\" formControlName=\"name\" placeholder=\" name\" />\n          <input type=\"number\" formControlName=\"value\" placeholder=\"Deduction Value\" />\n        </div>\n      </div>\n      <br>\n      <button type=\"submit\">Save</button>\n      <button type=\"button\" (click)=\"addItem()\">Add More</button>\n    </form>\n    <div>\n    </div>\n"
+module.exports = "<div class=\"container\">\n  <div>\n    <form [formGroup]=\"inputsForm\" (ngSubmit)=\"OnSubmit(inputsForm.value)\">\n      <div>\n        <label for=\"employeeName\"> Employee Name:</label>\n        <br>\n        <input type=\"text\" formControlName=\"employeeName\" [(ngModel)]=\"employeeName\">\n        <br>\n        <label for=\"baseSalary\">Base Salary:</label>\n        <br>\n        <input type=\"number\" name=\"baseSalary\" [(ngModel)]=\"baseSalary\" formControlName=\"baseSalary\">\n      </div>\n      <label for=\"Deductions\"> Add Deductions</label>\n      <div formArrayName=\"deductions\" *ngFor=\"let deduction of deductions?.controls; let i = index;\">\n        <div [formGroupName]=\"i\">\n          <input type=\"text\" formControlName=\"name\" placeholder=\" name\" />\n          <input type=\"number\" formControlName=\"value\" placeholder=\"Deduction Value\" (blur)=\"calculateTakeHome(inputsForm.value)\" />\n        </div>\n      </div>\n      <p>\n        <b> Take Home Salary</b> :{{takeHome}} $</p>\n      <br>\n      <button type=\"submit\">Save</button>\n      <button type=\"button\" (click)=\"addItem()\">Add More</button>\n    </form>\n    <div>\n    </div>\n"
 
 /***/ }),
 
@@ -55,13 +55,29 @@ var AddEmployeeComponent = /** @class */ (function () {
     function AddEmployeeComponent(formBuilder, employeeService) {
         this.formBuilder = formBuilder;
         this.employeeService = employeeService;
+        this.baseSalary = 0;
+        this.takeHome = 0;
     }
     AddEmployeeComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.inputsForm = this.formBuilder.group({
             employeeName: "",
             baseSalary: 0,
             deductions: this.formBuilder.array([this.createItem()])
         });
+        this.employeeName = this.name;
+        this.baseSalary = this.salary;
+        if (this.employeeId !== undefined) {
+            this.employeeService.getEmployee(this.employeeId).subscribe(function (res) {
+                _this.inputsForm.value.deductions = res;
+            });
+        }
+    };
+    AddEmployeeComponent.prototype.calculateTakeHome = function (formValue) {
+        console.log(formValue.deductions);
+        var deductionsArray = formValue.deductions.map(function (d) { return d.value; });
+        var totalDeductions = deductionsArray.reduce(function (acc, curr) { return acc + curr; });
+        this.takeHome = this.baseSalary - totalDeductions;
     };
     AddEmployeeComponent.prototype.createItem = function () {
         return this.formBuilder.group({
@@ -80,6 +96,7 @@ var AddEmployeeComponent = /** @class */ (function () {
         this.deductions.push(this.createItem());
     };
     AddEmployeeComponent.prototype.OnSubmit = function (formValue) {
+        //if used for adding employee
         if (this.employeeId === undefined) {
             this.employeeService
                 .addEmployee(formValue)
@@ -88,8 +105,9 @@ var AddEmployeeComponent = /** @class */ (function () {
             console.log(formValue);
         }
         else {
+            //for updating employee
             this.employeeService
-                .editEmployee(formValue, { epm_id: this.employeeId })
+                .editEmployee(formValue, { emp_id: this.employeeId })
                 .subscribe(function (res) {
                 alert("successful!");
                 return console.log(res);
@@ -100,6 +118,14 @@ var AddEmployeeComponent = /** @class */ (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
         __metadata("design:type", String)
     ], AddEmployeeComponent.prototype, "employeeId", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", String)
+    ], AddEmployeeComponent.prototype, "name", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", Number)
+    ], AddEmployeeComponent.prototype, "salary", void 0);
     AddEmployeeComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: "app-add-employee",
@@ -316,11 +342,14 @@ var EmployeeService = /** @class */ (function () {
     };
     EmployeeService.prototype.editEmployee = function (obj, employeeId) {
         var employeeObj = Object.assign(obj, employeeId);
-        console.log("edit");
+        console.log(employeeObj);
         return this.http.post("https://whispering-fortress-39678.herokuapp.com/edit", employeeObj);
     };
     EmployeeService.prototype.getAllEmployees = function () {
         return this.http.get("https://whispering-fortress-39678.herokuapp.com/all");
+    };
+    EmployeeService.prototype.getEmployee = function (emp_id) {
+        return this.http.get("https://whispering-fortress-39678.herokuapp.com/getOne", emp_id);
     };
     EmployeeService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
@@ -343,7 +372,7 @@ module.exports = ""
 /***/ "./src/app/view/view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"col-lg-6\">\n    <table table table-striped>\n      <tr>\n        <th> Employee Id</th>\n        <th> Employee Name</th>\n        <th> Base Salary</th>\n      </tr>\n      <tr *ngFor=\"let employee of employees | async\">\n        <td>{{employee.emp_id}}</td>\n        <td>{{employee.name}}</td>\n        <td>{{employee.baseSalary}}</td>\n        <td>\n          <span (click)=\"showDetails(employee.emp_id)\">\n            <i class=\"fa fa-edit\"></i>\n          </span>\n        </td>\n      </tr>\n    </table>\n  </div>\n  <div class=\"col-lg-4\">\n    <app-add-employee *ngIf=\"employeeId.length>0\" [employeeId]=\"employeeId\"></app-add-employee>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"col-lg-6\">\n    <table class=\"table table-striped\">\n      <tr>\n        <th> Employee Id</th>\n        <th> Employee Name</th>\n        <th> Base Salary</th>\n        <th>Edit</th>\n      </tr>\n      <tr *ngFor=\"let employee of employees | async\">\n        <td>{{employee.emp_id}}</td>\n        <td>{{employee.name}}</td>\n        <td>{{employee.base_salary}}</td>\n        <td>\n          <span (click)=\"showDetails(employee.emp_id, employee.name, employee.base_salary)\">\n            <i class=\"fa fa-edit\"></i>\n          </span>\n        </td>\n      </tr>\n    </table>\n  </div>\n  <div class=\"col-lg-4\">\n    <app-add-employee *ngIf=\"employeeId.length>0\" [name]=\"employeeName\" [salary]=\"employeeSalary\" [employeeId]=\"employeeId\"></app-add-employee>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -371,9 +400,12 @@ var ViewComponent = /** @class */ (function () {
         this.employees = [];
         this.detailView = false;
         this.employeeId = "";
+        this.employeeName = "";
     }
-    ViewComponent.prototype.showDetails = function (emp_id) {
+    ViewComponent.prototype.showDetails = function (emp_id, name, salary) {
         this.employeeId = emp_id;
+        this.employeeName = name;
+        this.employeeSalary = salary;
         this.detailView = true;
         console.log(this.employeeId);
     };
