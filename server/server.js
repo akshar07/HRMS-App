@@ -100,9 +100,9 @@ function editDeductions(deductions, emp_id) {
       }
     );
     client.query(
-      `UPDATE deductions 
-       SET name='${deduction.name}',value='${deduction.value}'
-        WHERE emp_id='${emp_id}'`,
+      `INSERT INTO deductions 
+      (emp_id,name,value) 
+      VALUES('${emp_id}','${deduction.name}','${deduction.value}')`,
       (err, result) => {
         if (err) {
           return console.log(err);
