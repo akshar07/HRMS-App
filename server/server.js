@@ -90,10 +90,20 @@ function editDeductions(deductions, emp_id) {
   console.log(deductions);
   deductions.forEach(deduction => {
     client.query(
+      `DELETE FROM deductions WHERE emp_id='${emp_id}'`,
+      (err, result) => {
+        if (err) {
+          return console.log(err);
+        } else {
+          return console.log("delete successful");
+        }
+      }
+    );
+    client.query(
       `UPDATE deductions 
        SET name='${deduction.name}',value='${deduction.value}'
         WHERE emp_id='${emp_id}'`,
-      (err, res) => {
+      (err, result) => {
         if (err) {
           return console.log(err);
         } else {
