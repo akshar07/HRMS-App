@@ -140,6 +140,7 @@ app.post("/edit", (req, res) => {
 
 //edit employee function
 function updateEmployee(name, baseSalary, emp_id, take_home) {
+  console.log(take_home);
   client.query(
     `UPDATE employees SET name='${name}', base_salary='${baseSalary}', take_home='${take_home}' WHERE emp_id='${emp_id}'`,
     (err, result) => {
