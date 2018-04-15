@@ -123,7 +123,7 @@ function updateEmployee(name, baseSalary, emp_id) {
   );
 }
 // get one employe route
-app.get("getOne", (req, res) => {
+app.get("/getOne", (req, res) => {
   let id = req.params.emp_id;
   client.query(
     `SELECT * FROM deductions WHERE emp_id='${id}'`,
