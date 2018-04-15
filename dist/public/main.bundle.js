@@ -324,7 +324,7 @@ module.exports = ""
 /***/ "./src/app/view/view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <table table table-striped>\n    <tr>\n      <th> Employee Id</th>\n      <th> Employee Name</th>\n      <th> Base Salary</th>\n    </tr>\n    <tr *ngFor=\"let employee of employees | async\">\n      <td>{{employee.emp_id}}</td>\n      <td>{{employee.name}}</td>\n      <td>{{employee.baseSalary}}</td>\n      <td>\n        <span (click)=\"showDetails(emp_id)\">\n          <i class=\"fa fa-edit\"></i>\n        </span>\n      </td>\n      <div *ngIf=\"employeeId===employee.emp_id\">\n        <app-add-employee></app-add-employee>\n      </div>\n    </tr>\n  </table>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <table table table-striped>\n    <tr>\n      <th> Employee Id</th>\n      <th> Employee Name</th>\n      <th> Base Salary</th>\n    </tr>\n    <tr *ngFor=\"let employee of employees | async\">\n      <td>{{employee.emp_id}}</td>\n      <td>{{employee.name}}</td>\n      <td>{{employee.baseSalary}}</td>\n      <td>\n        <span (click)=\"showDetails(employee.emp_id)\">\n          <i class=\"fa fa-edit\"></i>\n        </span>\n      </td>\n      <div *ngIf=\"employeeId===employee.emp_id\">\n        <app-add-employee></app-add-employee>\n      </div>\n    </tr>\n  </table>\n</div>\n"
 
 /***/ }),
 
