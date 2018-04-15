@@ -108,7 +108,7 @@ app.post("/edit", (req, res) => {
 });
 
 //edit employee
-function editEmployee(name, baseSalary, emp_id) {
+function updateEmployee(name, baseSalary, emp_id) {
   client.query(
     `UPDATE employees SET name='${name}', base_salary='${baseSalary}' WHERE emp_id='${emp_id}'`,
     (err, result) => {
