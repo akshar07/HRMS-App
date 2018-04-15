@@ -98,7 +98,7 @@ app.get("/all", (req, res) => {
   });
 });
 //edit employee
-app.get("/edit", (req, res) => {
+app.post("/edit", (req, res) => {
   let emp_id = req.body.emp_id;
   let name = req.body.employeeName;
   let baseSalary = req.body.baseSalary;
