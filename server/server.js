@@ -85,6 +85,23 @@ function addDeductions(deductions, emp_id) {
     );
   });
 }
+//update deductions
+function editDeductions(deductions, emp_id) {
+  deductions.forEach(deduction => {
+    client.query(
+      `UPDATE deductions 
+       SET name='${deduction.name}',value='${deduction.value}'
+        WHERE emp_id='${emp_id}'`,
+      (err, res) => {
+        if (err) {
+          return console.log(err);
+        } else {
+          return console.log("deductions updated");
+        }
+      }
+    );
+  });
+}
 //get all employees
 app.get("/all", (req, res) => {
   let employees = [];
@@ -106,6 +123,7 @@ app.post("/edit", (req, res) => {
   let deductions = req.body.deductions;
   let take_home = Number(req.body.take_home);
   updateEmployee(name, baseSalary, emp_id, take_home);
+  editDeductions(deductions, emp_id);
   res.send({ done: true });
 });
 
