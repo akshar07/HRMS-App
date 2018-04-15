@@ -124,8 +124,7 @@ function updateEmployee(name, baseSalary, emp_id) {
 }
 // get one employe route
 app.get("/getOne", (req, res) => {
-  console.log(req.params);
-  console.log(req.query);
+  let id = req.query.id;
   client.query(
     `SELECT * FROM deductions WHERE emp_id='${id}'`,
     (err, result) => {
