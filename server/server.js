@@ -87,6 +87,7 @@ function addDeductions(deductions, emp_id) {
 }
 //update deductions
 function editDeductions(deductions, emp_id) {
+  console.log(deductions);
   deductions.forEach(deduction => {
     client.query(
       `UPDATE deductions 
