@@ -131,6 +131,7 @@ app.get("/getOne", (req, res) => {
       if (err) {
         return console.log(err);
       } else {
+        console.log(result);
         res.send(result.rows);
       }
     }
