@@ -58,7 +58,7 @@ app.post("/add", (req, res) => {
 //addEmployee
 function addEmployee(name, baseSalary, emp_id) {
   client.query(
-    `INSERT INTO employees (name, base_salary,emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
+    `INSERT INTO employees (name, base_salary, emp_id) VALUES ('${name}','${baseSalary}','${emp_id}')`,
     (err, res) => {
       if (err) {
         return console.log(err);
@@ -97,4 +97,27 @@ app.get("/all", (req, res) => {
     }
   });
 });
+//edit employee
+app.get("/edit", (req, res) => {
+  let emp_id = req.body.emp_id;
+  let name = req.body.employeeName;
+  let baseSalary = req.body.baseSalary;
+  let deductions = req.body.deductions;
+
+  updateEmployee(name, baseSalary, emp_id);
+});
+
+//edit employee
+function editEmployee(name, baseSalary, emp_id) {
+  client.query(
+    `UPDATE employees SET name='${name}', base_salary='${baseSalary}' WHERE emp_id='${emp_id}'`,
+    (err, result) => {
+      if (err) {
+        return console.log(err);
+      } else {
+        return console.log("success!");
+      }
+    }
+  );
+}
 app.listen(process.env.PORT || 3000, () => console.log("listening"));

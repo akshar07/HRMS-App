@@ -80,12 +80,26 @@ var AddEmployeeComponent = /** @class */ (function () {
         this.deductions.push(this.createItem());
     };
     AddEmployeeComponent.prototype.OnSubmit = function (formValue) {
-        this.employeeService
-            .addEmployee(formValue)
-            .subscribe(function (res) { return console.log(res); });
-        alert("Employee Saved");
-        console.log(formValue);
+        if (this.employeeId === undefined) {
+            this.employeeService
+                .addEmployee(formValue)
+                .subscribe(function (res) { return console.log(res); });
+            alert("Employee Saved");
+            console.log(formValue);
+        }
+        else {
+            this.employeeService
+                .editEmployee(formValue, { epm_id: this.employeeId })
+                .subscribe(function (res) {
+                alert("successful!");
+                return console.log(res);
+            });
+        }
     };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", String)
+    ], AddEmployeeComponent.prototype, "employeeId", void 0);
     AddEmployeeComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: "app-add-employee",
@@ -300,6 +314,11 @@ var EmployeeService = /** @class */ (function () {
         console.log("yes");
         return this.http.post("https://whispering-fortress-39678.herokuapp.com/add", obj);
     };
+    EmployeeService.prototype.editEmployee = function (obj, employeeId) {
+        var employeeObj = Object.assign(obj, employeeId);
+        console.log("edit");
+        return this.http.post("https://whispering-fortress-39678.herokuapp.com/edit", employeeObj);
+    };
     EmployeeService.prototype.getAllEmployees = function () {
         return this.http.get("https://whispering-fortress-39678.herokuapp.com/all");
     };
@@ -324,7 +343,7 @@ module.exports = ""
 /***/ "./src/app/view/view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <table table table-striped>\n    <tr>\n      <th> Employee Id</th>\n      <th> Employee Name</th>\n      <th> Base Salary</th>\n    </tr>\n    <tr *ngFor=\"let employee of employees | async\">\n      <td>{{employee.emp_id}}</td>\n      <td>{{employee.name}}</td>\n      <td>{{employee.baseSalary}}</td>\n      <td>\n        <span (click)=\"showDetails(employee.emp_id)\">\n          <i class=\"fa fa-edit\"></i>\n        </span>\n      </td>\n      <div *ngIf=\"employeeId===employee.emp_id\">\n        <app-add-employee></app-add-employee>\n      </div>\n    </tr>\n  </table>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"col-lg-6\">\n    <table table table-striped>\n      <tr>\n        <th> Employee Id</th>\n        <th> Employee Name</th>\n        <th> Base Salary</th>\n      </tr>\n      <tr *ngFor=\"let employee of employees | async\">\n        <td>{{employee.emp_id}}</td>\n        <td>{{employee.name}}</td>\n        <td>{{employee.baseSalary}}</td>\n        <td>\n          <span (click)=\"showDetails(employee.emp_id)\">\n            <i class=\"fa fa-edit\"></i>\n          </span>\n        </td>\n      </tr>\n    </table>\n  </div>\n  <div class=\"col-lg-4\">\n    <app-add-employee *ngIf=\"employeeId.length>0\" [employeeId]=\"employeeId\"></app-add-employee>\n  </div>\n</div>\n"
 
 /***/ }),
 
