@@ -20,7 +20,7 @@ const client = new Client({
 //create tables
 client.connect();
 const db_creation_string = `CREATE TABLE IF NOT EXISTS employees(id SERIAL PRIMARY KEY, name TEXT, base_salary TEXT, take_home DECIMAL, emp_id TEXT);
-                            CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id TEXT, deduction_name TEXT, deduction_value DECIMAL);`;
+                            CREATE TABLE IF NOT EXISTS deductions(id SERIAL PRIMARY KEY, emp_id TEXT, name TEXT, value DECIMAL);`;
 //body parser
 app.enable("trust proxy");
 app.use(express_enforces_ssl());
@@ -73,7 +73,7 @@ function addDeductions(deductions, emp_id) {
   deductions.forEach(deduction => {
     client.query(
       `INSERT INTO deductions 
-      (emp_id,deduction_name,deduction_value) 
+      (emp_id,name,value) 
       VALUES('${emp_id}','${deduction.name}','${deduction.value}')`,
       (err, res) => {
         if (err) {
