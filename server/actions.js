@@ -3,7 +3,7 @@ const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true
 });
-
+client.connect();
 const actions = {
   addEmployee: (name, baseSalary, emp_id, take_home) => {
     client.query(
