@@ -186,5 +186,13 @@ app.delete("/delete", (req, res) => {
       return console.log("delete successful");
     }
   });
+  client.query(`SELECT * FROM employees`, (err, result) => {
+    if (err) {
+      return console.log(err);
+    } else {
+      console.log(result.rows);
+      res.send(result.rows);
+    }
+  });
 });
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
