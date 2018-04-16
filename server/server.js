@@ -190,7 +190,7 @@ app.delete("/delete", (req, res) => {
     if (err) {
       return console.log(err);
     } else {
-      console.log(result.rows);
+      console.log("resent employees");
       res.send(result.rows);
     }
   });
