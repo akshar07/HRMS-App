@@ -179,15 +179,12 @@ app.delete("/delete", (req, res) => {
       return console.log("deleted successfully");
     }
   });
-  client.query(
-    `DELETE FROM deductions WHERE emp_id='${emp_id}'`,
-    (err, result) => {
-      if (err) {
-        return console.log(err);
-      } else {
-        return console.log("delete successful");
-      }
+  client.query(`DELETE FROM deductions WHERE emp_id='${id}'`, (err, result) => {
+    if (err) {
+      return console.log(err);
+    } else {
+      return console.log("delete successful");
     }
-  );
+  });
 });
 app.listen(process.env.PORT || 3000, () => console.log("listening"));
