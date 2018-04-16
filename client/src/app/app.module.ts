@@ -8,10 +8,15 @@ import { routes } from "./app-routes";
 import { HomeComponent } from "./home/home.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EmployeeService } from "./services/employee-service";
-import { ViewComponent } from './view/view.component';
+import { ViewComponent } from "./view/view.component";
 
 @NgModule({
-  declarations: [AppComponent, AddEmployeeComponent, HomeComponent, ViewComponent],
+  declarations: [
+    AppComponent,
+    AddEmployeeComponent,
+    HomeComponent,
+    ViewComponent
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
