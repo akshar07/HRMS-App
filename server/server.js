@@ -32,6 +32,7 @@ app.use(
     extended: true
   })
 );
+//get home page
 app.get("/", (req, res) => {
   console.log(db_creation_string);
   client.query(db_creation_string, (err, res) => {
@@ -43,6 +44,7 @@ app.get("/", (req, res) => {
   });
   res.render("index.ejs");
 });
+//add employee route
 app.post("/add", (req, res) => {
   console.log(req.body);
   let emp_id = shortid.generate();
