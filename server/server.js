@@ -170,7 +170,7 @@ app.get("/getOne", (req, res) => {
   );
 });
 // delete employee
-app.delete("delete", (req, res) => {
+app.delete("/delete", (req, res) => {
   let id = req.query.id;
   client.query(`DELETE from employees WHERE emp_id='${id}'`, (err, result) => {
     if (err) {
