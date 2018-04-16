@@ -5,6 +5,7 @@ const cors = require("cors");
 const shortid = require("shortid");
 const app = express();
 const express_enforces_ssl = require("express-enforces-ssl");
+const actions = require("./actions");
 //cors middleware
 app.use(cors());
 //set static folders
@@ -31,7 +32,6 @@ app.use(
     extended: true
   })
 );
-
 app.get("/", (req, res) => {
   console.log(db_creation_string);
   client.query(db_creation_string, (err, res) => {
@@ -51,70 +51,14 @@ app.post("/add", (req, res) => {
   let deductions = req.body.deductions;
   let take_home = req.body.takeHome;
   //add data to employees table
-  addEmployee(name, baseSalary, emp_id, take_home);
-  addDeductions(deductions, emp_id);
+  actions.addEmployee(name, baseSalary, emp_id, take_home);
+  actions.addDeductions(deductions, emp_id);
   res.send({ done: true });
 });
 //addEmployee
-function addEmployee(name, baseSalary, emp_id, take_home) {
-  client.query(
-    `INSERT INTO employees (name, base_salary, take_home, emp_id) VALUES ('${name}','${baseSalary}','${take_home}','${emp_id}')`,
-    (err, res) => {
-      if (err) {
-        return console.log(err);
-      } else {
-        console.log("employee added");
-      }
-    }
-  );
-}
+
 //add deductions
-function addDeductions(deductions, emp_id) {
-  deductions.forEach(deduction => {
-    client.query(
-      `INSERT INTO deductions 
-      (emp_id,name,value) 
-      VALUES('${emp_id}','${deduction.name}','${deduction.value}')`,
-      (err, res) => {
-        if (err) {
-          return console.log(err);
-        } else {
-          return console.log("deductions added");
-        }
-      }
-    );
-  });
-}
-//update deductions
-function editDeductions(deductions, emp_id) {
-  console.log(deductions);
-  deductions.forEach(deduction => {
-    client.query(
-      `DELETE FROM deductions WHERE emp_id='${emp_id}'`,
-      (err, result) => {
-        if (err) {
-          return console.log(err);
-        } else {
-          return console.log("delete successful");
-        }
-      }
-    );
-  });
-  deductions.forEach(deduction => {
-    client.query(
-      `INSERT INTO deductions 
-      (emp_id,name,value) 
-      VALUES('${emp_id}','${deduction.name}','${deduction.value}')`,
-      (err, res) => {
-        if (err) {
-          return console.log(err);
-        } else {
-          return console.log("deductions added");
-        }
-      }
-    );
-  });
-}
+
 //get all employees
 app.get("/all", (req, res) => {
   let employees = [];
@@ -135,25 +79,11 @@ app.post("/edit", (req, res) => {
   let baseSalary = Number(req.body.baseSalary);
   let deductions = req.body.deductions;
   let take_home = Number(req.body.takeHome);
-  updateEmployee(name, baseSalary, emp_id, take_home);
-  editDeductions(deductions, emp_id);
+  actions.updateEmployee(name, baseSalary, emp_id, take_home);
+  actions.editDeductions(deductions, emp_id);
   res.send({ done: true });
 });
 
-//edit employee function
-function updateEmployee(name, baseSalary, emp_id, take_home) {
-  console.log(take_home);
-  client.query(
-    `UPDATE employees SET name='${name}', base_salary='${baseSalary}', take_home='${take_home}' WHERE emp_id='${emp_id}'`,
-    (err, result) => {
-      if (err) {
-        return console.log(err);
-      } else {
-        return console.log("success");
-      }
-    }
-  );
-}
 // get one employe route
 app.get("/getOne", (req, res) => {
   let id = req.query.id;
