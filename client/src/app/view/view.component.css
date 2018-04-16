@@ -1,0 +1,13 @@
+.detailsOn {
+  background: #ffbc83;
+}
+.edit,
+.delete {
+  cursor: pointer;
+}
+.delete {
+  margin-left: 10px;
+}
+.orange {
+  color: #da863e;
+}

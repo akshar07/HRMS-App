@@ -1,0 +1,35 @@
+.form {
+  position: relative;
+  padding-bottom: 20px;
+}
+.actions {
+  position: absolute;
+  bottom: 0;
+}
+input {
+  margin-top: 7px;
+  height: 30px;
+  width: 70%;
+}
+.deductions button {
+  margin-top: 10px;
+}
+.no-padding {
+  padding-left: 0;
+}
+.addDeductions {
+  margin-top: 10px;
+  color: #0366d6;
+  cursor: pointer;
+  width: 80px;
+}
+
+.orange {
+  color: #da863e;
+}
+.takeHome {
+  margin-top: 10px;
+}
+.heading {
+  margin-left: 15px;
+}

@@ -1,0 +1,59 @@
+<div class="container">
+  <h4 class="orange heading" *ngIf="employeeId === undefined">Add Employee</h4>
+  <div class="col-lg-6 form">
+    <form [formGroup]="inputsForm" (ngSubmit)="OnSubmit(inputsForm.value)">
+      <div class="col-lg-6 no-padding">
+        <label for="employeeName"> Employee Name:</label>
+      </div>
+      <div class="col-lg-6">
+        <input type="text" formControlName="employeeName" [(ngModel)]="employeeName">
+        <p class="error-msg" *ngIf="inputsForm.controls.employeeName.errors?.required &&
+        inputsForm.controls.employeeName.dirty">Name is required</p>
+      </div>
+      <div class="col-lg-6 no-padding">
+        <label for="baseSalary">Base Salary:</label>
+      </div>
+      <div class="col-lg-6 ">
+        <input type="number" name="baseSalary" class="form-control" [(ngModel)]="baseSalary" formControlName="baseSalary" (blur)="calculateTakeHome(inputsForm.value)">
+        <p class="error-msg" *ngIf="inputsForm.controls.baseSalary.errors?.min &&
+        inputsForm.controls.baseSalary.dirty">Base Salary cannot be negative</p>
+        <p class="error-msg" *ngIf="inputsForm.controls.baseSalary.errors?.required &&
+        inputsForm.controls.baseSalary.dirty">Base Salary is is required</p>
+      </div>
+      <div class="deductions">
+        <label for="Deductions"> Add Deductions</label>
+        <div formArrayName="deductions" *ngFor="let deduction of deductions?.controls; let i = index;">
+          <div [formGroupName]="i">
+            <div class="col-lg-6 no-padding">
+              <input type="text" formControlName="name" placeholder=" name" />
+            </div>
+            <div class="col-lg-6">
+              <input type="number" formControlName="value" placeholder="Deduction Value" (blur)="calculateTakeHome(inputsForm.value)" />
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <p (click)="addItem()" class="addDeductions">Add More</p>
+      </div>
+      <div class="actions">
+        <button class=" btn btn-success" type="submit" [disabled]="!inputsForm.valid && !takeHome>0">Save</button>
+      </div>
+    </form>
+    <div *ngIf="currentDeductions.length>0">
+      <label for="current"> Current Deductions</label>
+      <div *ngFor="let item of currentDeductions;let index = index;trackBy:trackByIndex;">
+        <div class="col-lg-6">
+          <input [(ngModel)]="currentDeductions[index].name" placeholder="name">
+        </div>
+        <div class="col-lg-6">
+          <input [(ngModel)]="currentDeductions[index].value" placeholder="value" (blur)="reCalculateTakeHome()">
+
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <p class="takeHome">
+      <b> Take Home Salary</b> :{{takeHome}} $</p>
+    <br>
+  </div>
+</div>

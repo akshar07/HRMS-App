@@ -1,0 +1,46 @@
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Employee</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are You Sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="deleteEmployee()">Delete</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+  <div class="col-lg-6">
+    <h4 class="orange"> All Employees</h4>
+    <table class="table table-striped">
+      <tr>
+        <th> Employee Id</th>
+        <th> Employee Name</th>
+        <th>Edit /Details</th>
+      </tr>
+      <tr *ngFor="let employee of employees | async">
+        <td>{{employee.emp_id}}</td>
+        <td>{{employee.name}}</td>
+        <td>
+          <span class="edit" (click)="showDetails(employee.emp_id, employee.name, employee.base_salary,employee.take_home)">
+            <i class="fa fa-edit"></i>
+          </span>
+          <span class="delete" data-toggle="modal" data-target="#myModal" (click)="setEmployeeToDelete=employee.emp_id;detailView=false;">
+            <i class="fa fa-trash"></i>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div *ngIf="employeeId.length>0 && detailView==true">
+    <h4 class="orange"> Employee Details</h4>
+    <app-add-employee [takeHome]="takeHome" [employeeName]="employeeName" [baseSalary]="employeeSalary" [employeeId]="employeeId"></app-add-employee>
+  </div>
+</div>
