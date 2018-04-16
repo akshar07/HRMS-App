@@ -55,10 +55,6 @@ app.post("/add", (req, res) => {
   actions.addDeductions(deductions, emp_id);
   res.send({ done: true });
 });
-//addEmployee
-
-//add deductions
-
 //get all employees
 app.get("/all", (req, res) => {
   let employees = [];
@@ -83,7 +79,6 @@ app.post("/edit", (req, res) => {
   actions.editDeductions(deductions, emp_id);
   res.send({ done: true });
 });
-
 // get one employe route
 app.get("/getOne", (req, res) => {
   let id = req.query.id;

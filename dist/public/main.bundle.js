@@ -20,14 +20,14 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /***/ "./src/app/add-employee/add-employee.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".form {\n  position: relative;\n  padding-bottom: 20px;\n}\n.actions {\n  position: absolute;\n  bottom: 0;\n}\ninput {\n  margin-top: 7px;\n  height: 30px;\n}\n.deductions button {\n  margin-top: 10px;\n}\n.no-padding {\n  padding-left: 0;\n}\n.addDeductions {\n  margin-top: 10px;\n  color: #0366d6;\n  cursor: pointer;\n  width: 80px;\n}\n.orange {\n  color: #da863e;\n}\n.takeHome {\n  margin-top: 10px;\n}\n.heading {\n  margin-left: 15px;\n}\n"
 
 /***/ }),
 
 /***/ "./src/app/add-employee/add-employee.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div>\n    <form [formGroup]=\"inputsForm\" (ngSubmit)=\"OnSubmit(inputsForm.value)\">\n      <div>\n        <label for=\"employeeName\"> Employee Name:</label>\n        <br>\n        <input type=\"text\" formControlName=\"employeeName\" [(ngModel)]=\"employeeName\">\n        <br>\n        <label for=\"baseSalary\">Base Salary:</label>\n        <br>\n        <input type=\"number\" name=\"baseSalary\" [(ngModel)]=\"baseSalary\" formControlName=\"baseSalary\">\n      </div>\n      <label for=\"Deductions\"> Add Deductions</label>\n      <div formArrayName=\"deductions\" *ngFor=\"let deduction of deductions?.controls; let i = index;\">\n        <div [formGroupName]=\"i\">\n          <input type=\"text\" formControlName=\"name\" placeholder=\" name\" />\n          <input type=\"number\" formControlName=\"value\" placeholder=\"Deduction Value\" (blur)=\"calculateTakeHome(inputsForm.value)\" />\n        </div>\n      </div>\n      <p>\n        <b> Take Home Salary</b> :{{takeHome}} $</p>\n      <br>\n      <button type=\"submit\">Save</button>\n      <button type=\"button\" (click)=\"addItem()\">Add More</button>\n    </form>\n    <div>\n    </div>\n"
+module.exports = "<div class=\"container\">\n  <h4 class=\"orange heading\" *ngIf=\"employeeId === undefined\">Add Employee</h4>\n  <div class=\"col-lg-6 form\">\n    <form [formGroup]=\"inputsForm\" (ngSubmit)=\"OnSubmit(inputsForm.value)\">\n      <div class=\"col-lg-6 no-padding\">\n        <label for=\"employeeName\"> Employee Name:</label>\n      </div>\n      <div class=\"col-lg-6\">\n        <input type=\"text\" formControlName=\"employeeName\" [(ngModel)]=\"employeeName\">\n      </div>\n      <div class=\"col-lg-6 no-padding\">\n        <label for=\"baseSalary\">Base Salary:</label>\n      </div>\n      <div class=\"col-lg-6 \">\n        <input type=\"number\" name=\"baseSalary\" [(ngModel)]=\"baseSalary\" formControlName=\"baseSalary\" (blur)=\"calculateTakeHome(inputsForm.value)\">\n      </div>\n\n      <div class=\"deductions\">\n        <label for=\"Deductions\"> Add Deductions</label>\n        <div formArrayName=\"deductions\" *ngFor=\"let deduction of deductions?.controls; let i = index;\">\n          <div [formGroupName]=\"i\">\n            <div class=\"col-lg-6 no-padding\">\n              <input type=\"text\" formControlName=\"name\" placeholder=\" name\" />\n            </div>\n            <div class=\"col-lg-6\">\n              <input type=\"number\" formControlName=\"value\" placeholder=\"Deduction Value\" (blur)=\"calculateTakeHome(inputsForm.value)\" />\n            </div>\n          </div>\n        </div>\n        <div class=\"clearfix\"></div>\n        <p (click)=\"addItem()\" class=\"addDeductions\">Add More</p>\n      </div>\n      <div class=\"actions\">\n        <button class=\" btn btn-success\" type=\"submit\">Save</button>\n      </div>\n    </form>\n    <div *ngIf=\"currentDeductions.length>0\">\n      <label for=\"current\"> Current Deductions</label>\n      <div *ngFor=\"let item of currentDeductions;let index = index;trackBy:trackByIndex;\">\n        <div class=\"col-lg-6\">\n          <input [(ngModel)]=\"currentDeductions[index].name\" placeholder=\"name\">\n        </div>\n        <div class=\"col-lg-6\">\n          <input [(ngModel)]=\"currentDeductions[index].value\" placeholder=\"value\" (blur)=\"reCalculateTakeHome()\">\n\n        </div>\n      </div>\n    </div>\n    <div class=\"clearfix\"></div>\n    <p class=\"takeHome\">\n      <b> Take Home Salary</b> :{{takeHome}} $</p>\n    <br>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -55,30 +55,47 @@ var AddEmployeeComponent = /** @class */ (function () {
     function AddEmployeeComponent(formBuilder, employeeService) {
         this.formBuilder = formBuilder;
         this.employeeService = employeeService;
-        this.baseSalary = 0;
-        this.takeHome = 0;
+        this.currentDeductions = [];
     }
     AddEmployeeComponent.prototype.ngOnInit = function () {
-        var _this = this;
+        //iniitalize form
         this.inputsForm = this.formBuilder.group({
             employeeName: "",
             baseSalary: 0,
             deductions: this.formBuilder.array([this.createItem()])
         });
-        this.employeeName = this.name;
-        this.baseSalary = this.salary;
-        if (this.employeeId !== undefined) {
-            this.employeeService.getEmployee(this.employeeId).subscribe(function (res) {
-                _this.inputsForm.value.deductions = res;
-            });
-        }
     };
-    AddEmployeeComponent.prototype.calculateTakeHome = function (formValue) {
-        console.log(formValue.deductions);
-        var deductionsArray = formValue.deductions.map(function (d) { return d.value; });
+    //call service to get deductions of employee
+    AddEmployeeComponent.prototype.getEmployeeDeductions = function (id) {
+        var _this = this;
+        this.employeeService.getEmployee(this.employeeId).subscribe(function (res) {
+            _this.currentDeductions = res;
+            console.log(res);
+        });
+    };
+    // calculate take home if wxisting deductions changed
+    AddEmployeeComponent.prototype.reCalculateTakeHome = function () {
+        var current = [];
+        current = this.currentDeductions.map(function (d) { return Number(d.value); });
+        var deductionsArray = this.inputsForm.value.deductions
+            .map(function (d) { return Number(d.value); })
+            .concat(current);
         var totalDeductions = deductionsArray.reduce(function (acc, curr) { return acc + curr; });
         this.takeHome = this.baseSalary - totalDeductions;
     };
+    //calculate Take Home salary
+    AddEmployeeComponent.prototype.calculateTakeHome = function (formValue) {
+        var current = [];
+        if (this.currentDeductions.length > 0) {
+            current = this.currentDeductions.map(function (d) { return Number(d.value); });
+        }
+        var deductionsArray = formValue.deductions
+            .map(function (d) { return Number(d.value); })
+            .concat(current);
+        var totalDeductions = deductionsArray.reduce(function (acc, curr) { return acc + curr; });
+        this.takeHome = this.baseSalary - totalDeductions;
+    };
+    //create new dedctions item
     AddEmployeeComponent.prototype.createItem = function () {
         return this.formBuilder.group({
             name: "",
@@ -95,19 +112,25 @@ var AddEmployeeComponent = /** @class */ (function () {
     AddEmployeeComponent.prototype.addItem = function () {
         this.deductions.push(this.createItem());
     };
+    //submit form
     AddEmployeeComponent.prototype.OnSubmit = function (formValue) {
+        var temp = this.currentDeductions.map(function (d) {
+            return { name: d.name, value: Number(d.value) };
+        });
+        formValue.deductions = formValue.deductions.concat(temp);
+        formValue.baseSalary = Number(formValue.baseSalary);
+        var employeeObj = Object.assign({}, formValue, { takeHome: this.takeHome });
         //if used for adding employee
         if (this.employeeId === undefined) {
             this.employeeService
-                .addEmployee(formValue)
+                .addEmployee(employeeObj)
                 .subscribe(function (res) { return console.log(res); });
             alert("Employee Saved");
-            console.log(formValue);
         }
         else {
             //for updating employee
             this.employeeService
-                .editEmployee(formValue, { emp_id: this.employeeId })
+                .editEmployee(employeeObj, { emp_id: this.employeeId })
                 .subscribe(function (res) {
                 alert("successful!");
                 return console.log(res);
@@ -121,11 +144,15 @@ var AddEmployeeComponent = /** @class */ (function () {
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
         __metadata("design:type", String)
-    ], AddEmployeeComponent.prototype, "name", void 0);
+    ], AddEmployeeComponent.prototype, "employeeName", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
         __metadata("design:type", Number)
-    ], AddEmployeeComponent.prototype, "salary", void 0);
+    ], AddEmployeeComponent.prototype, "baseSalary", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", Number)
+    ], AddEmployeeComponent.prototype, "takeHome", void 0);
     AddEmployeeComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: "app-add-employee",
@@ -165,7 +192,7 @@ var routes = [
 /***/ "./src/app/app.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".navbar {\n  background: #da863e;\n}\n\n.navbar-default .navbar-brand,\n.navbar-default .navbar-nav > li > a {\n  color: #fff;\n}\n"
 
 /***/ }),
 
@@ -267,14 +294,14 @@ var AppModule = /** @class */ (function () {
 /***/ "./src/app/home/home.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "h3 {\n  text-align: center;\n}\n"
 
 /***/ }),
 
 /***/ "./src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  home works!\n</p>\n"
+module.exports = "<div class=\"container\">\n  <h3> Welcome to the HR System! </h3>\n</div>\n"
 
 /***/ }),
 
@@ -337,7 +364,7 @@ var EmployeeService = /** @class */ (function () {
         this.http = http;
     }
     EmployeeService.prototype.addEmployee = function (obj) {
-        console.log("yes");
+        console.log(obj);
         return this.http.post("https://whispering-fortress-39678.herokuapp.com/add", obj);
     };
     EmployeeService.prototype.editEmployee = function (obj, employeeId) {
@@ -349,7 +376,10 @@ var EmployeeService = /** @class */ (function () {
         return this.http.get("https://whispering-fortress-39678.herokuapp.com/all");
     };
     EmployeeService.prototype.getEmployee = function (emp_id) {
-        return this.http.get("https://whispering-fortress-39678.herokuapp.com/getOne", emp_id);
+        return this.http.get("https://whispering-fortress-39678.herokuapp.com/getOne?id=" + emp_id);
+    };
+    EmployeeService.prototype.deleteEmployee = function (emp_id) {
+        return this.http.delete("https://whispering-fortress-39678.herokuapp.com/delete?id=" + emp_id);
     };
     EmployeeService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
@@ -365,14 +395,14 @@ var EmployeeService = /** @class */ (function () {
 /***/ "./src/app/view/view.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".detailsOn {\n  background: #ffbc83;\n}\n.edit,\n.delete {\n  cursor: pointer;\n}\n.delete {\n  margin-left: 10px;\n}\n.orange {\n  color: #da863e;\n}\n"
 
 /***/ }),
 
 /***/ "./src/app/view/view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"col-lg-6\">\n    <table class=\"table table-striped\">\n      <tr>\n        <th> Employee Id</th>\n        <th> Employee Name</th>\n        <th> Base Salary</th>\n        <th>Edit</th>\n      </tr>\n      <tr *ngFor=\"let employee of employees | async\">\n        <td>{{employee.emp_id}}</td>\n        <td>{{employee.name}}</td>\n        <td>{{employee.base_salary}}</td>\n        <td>\n          <span (click)=\"showDetails(employee.emp_id, employee.name, employee.base_salary)\">\n            <i class=\"fa fa-edit\"></i>\n          </span>\n        </td>\n      </tr>\n    </table>\n  </div>\n  <div class=\"col-lg-4\">\n    <app-add-employee *ngIf=\"employeeId.length>0\" [name]=\"employeeName\" [salary]=\"employeeSalary\" [employeeId]=\"employeeId\"></app-add-employee>\n  </div>\n</div>\n"
+module.exports = "<div id=\"myModal\" class=\"modal fade\" role=\"dialog\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n        <h4 class=\"modal-title\">Delete Employee</h4>\n      </div>\n      <div class=\"modal-body\">\n        <p>Are You Sure?</p>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" (click)=\"deleteEmployee()\">Delete</button>\n      </div>\n    </div>\n\n  </div>\n</div>\n\n<div class=\"container\">\n  <div class=\"col-lg-6\">\n    <h4 class=\"orange\"> All Employees</h4>\n    <table class=\"table table-striped\">\n      <tr>\n        <th> Employee Id</th>\n        <th> Employee Name</th>\n        <th>Edit /Details</th>\n      </tr>\n      <tr *ngFor=\"let employee of employees | async\">\n        <td>{{employee.emp_id}}</td>\n        <td>{{employee.name}}</td>\n        <td>\n          <span class=\"edit\" (click)=\"showDetails(employee.emp_id, employee.name, employee.base_salary,employee.take_home)\">\n            <i class=\"fa fa-edit\"></i>\n          </span>\n          <span class=\"delete\" data-toggle=\"modal\" data-target=\"#myModal\" (click)=\"setEmployeeToDelete=employee.emp_id;detailView=false;\">\n            <i class=\"fa fa-trash\"></i>\n          </span>\n        </td>\n      </tr>\n    </table>\n  </div>\n  <div *ngIf=\"employeeId.length>0 && detailView==true\">\n    <h4 class=\"orange\"> Employee Details</h4>\n    <app-add-employee [takeHome]=\"takeHome\" [employeeName]=\"employeeName\" [baseSalary]=\"employeeSalary\" [employeeId]=\"employeeId\"></app-add-employee>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -383,6 +413,7 @@ module.exports = "<div class=\"container\">\n  <div class=\"col-lg-6\">\n    <ta
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ViewComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_employee_service__ = __webpack_require__("./src/app/services/employee-service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__add_employee_add_employee_component__ = __webpack_require__("./src/app/add-employee/add-employee.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -394,6 +425,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var ViewComponent = /** @class */ (function () {
     function ViewComponent(employeeService) {
         this.employeeService = employeeService;
@@ -401,17 +433,31 @@ var ViewComponent = /** @class */ (function () {
         this.detailView = false;
         this.employeeId = "";
         this.employeeName = "";
+        this.delete = false;
     }
-    ViewComponent.prototype.showDetails = function (emp_id, name, salary) {
+    ViewComponent.prototype.showDetails = function (emp_id, name, salary, takeHome) {
+        var _this = this;
+        this.delete = true;
         this.employeeId = emp_id;
         this.employeeName = name;
         this.employeeSalary = salary;
+        this.takeHome = takeHome;
         this.detailView = true;
-        console.log(this.employeeId);
+        console.log(this.takeHome);
+        setTimeout(function () {
+            _this.addEmployee.getEmployeeDeductions(emp_id);
+        }, 500);
+    };
+    ViewComponent.prototype.deleteEmployee = function () {
+        this.employees = this.employeeService.deleteEmployee(this.setEmployeeToDelete);
     };
     ViewComponent.prototype.ngOnInit = function () {
         this.employees = this.employeeService.getAllEmployees();
     };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_2__add_employee_add_employee_component__["a" /* AddEmployeeComponent */]),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_2__add_employee_add_employee_component__["a" /* AddEmployeeComponent */])
+    ], ViewComponent.prototype, "addEmployee", void 0);
     ViewComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: "app-view",
@@ -457,7 +503,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* enableProdMode */])();
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_14" /* enableProdMode */])();
 }
 Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */])
     .catch(function (err) { return console.log(err); });
