@@ -40,7 +40,7 @@ export class AddEmployeeComponent implements OnInit {
       console.log(res);
     });
   }
-  // calculate take home if wxisting deductions changed
+  // calculate take home if existing deductions changed
   reCalculateTakeHome() {
     let current = [];
     current = this.currentDeductions.map(d => Number(d.value));

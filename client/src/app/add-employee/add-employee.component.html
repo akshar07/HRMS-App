@@ -14,7 +14,7 @@
         <label for="baseSalary">Base Salary:</label>
       </div>
       <div class="col-lg-6 ">
-        <input type="number" name="baseSalary" class="form-control" [(ngModel)]="baseSalary" formControlName="baseSalary" (blur)="calculateTakeHome(inputsForm.value)">
+        <input type="number" name="baseSalary" class="form-control" [(ngModel)]="baseSalary" formControlName="baseSalary" (keyup)="calculateTakeHome(inputsForm.value)">
         <p class="error-msg" *ngIf="inputsForm.controls.baseSalary.errors?.min &&
         inputsForm.controls.baseSalary.dirty">Base Salary cannot be negative</p>
         <p class="error-msg" *ngIf="inputsForm.controls.baseSalary.errors?.required &&
@@ -28,15 +28,17 @@
               <input type="text" formControlName="name" placeholder=" name" />
             </div>
             <div class="col-lg-6">
-              <input type="number" formControlName="value" placeholder="Deduction Value" (blur)="calculateTakeHome(inputsForm.value)" />
+              <input type="number" formControlName="value" placeholder="Deduction Value" (keyup)="calculateTakeHome(inputsForm.value)"
+              />
             </div>
           </div>
+          <p class="error-msg" *ngIf="takeHome<0">Deductions Cannot be greater than Base salary</p>
         </div>
         <div class="clearfix"></div>
         <p (click)="addItem()" class="addDeductions">Add More</p>
       </div>
       <div class="actions">
-        <button class=" btn btn-success" type="submit" [disabled]="!inputsForm.valid && !takeHome>0">Save</button>
+        <button class=" btn btn-success" type="submit" [disabled]="!inputsForm.valid || takeHome<0 ">Save</button>
       </div>
     </form>
     <div *ngIf="currentDeductions.length>0">
