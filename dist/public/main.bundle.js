@@ -136,6 +136,7 @@ var AddEmployeeComponent = /** @class */ (function () {
                 return console.log(res);
             });
         }
+        this.inputsForm.reset();
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
@@ -448,7 +449,6 @@ var ViewComponent = /** @class */ (function () {
         this.employeeSalary = salary;
         this.takeHome = takeHome;
         this.detailView = true;
-        console.log(this.takeHome);
         setTimeout(function () {
             _this.addEmployee.getEmployeeDeductions(emp_id);
         }, 500);

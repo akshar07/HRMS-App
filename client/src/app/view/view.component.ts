@@ -25,7 +25,7 @@ export class ViewComponent implements OnInit {
     this.employeeSalary = salary;
     this.takeHome = takeHome;
     this.detailView = true;
-    console.log(this.takeHome);
+
     setTimeout(() => {
       this.addEmployee.getEmployeeDeductions(emp_id);
     }, 500);

@@ -101,5 +101,6 @@ export class AddEmployeeComponent implements OnInit {
           return console.log(res);
         });
     }
+    this.inputsForm.reset();
   }
 }
